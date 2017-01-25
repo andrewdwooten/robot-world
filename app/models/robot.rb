@@ -1,8 +1,67 @@
 require 'sqlite3'
+require 'pry'
 
 class Robot
+  attr_reader :id, :name, :city, :state, :dept, :database
+
   def initialize(robot_params)
     @database = SQLite3::Database.new('db/robot_world_development.db')
     @database.results_as_hash = true
+    @id = robot_params['id']
+    @name = robot_params['name']
+    @city = robot_params['city']
+    @state = robot_params['state']
+    @dept = robot_params['department']
+  end
+
+  def save
+    @database.execute("INSERT INTO robots (name, city, state, department) VALUES (?, ?, ?, ?);", @name, @city, @state, @dept)
+  end
+
+  def self.all
+    database = SQLite3::Database.new('db/robot_world_development.db')
+    database.results_as_hash = true
+    robots = database.execute("SELECT * FROM robots")
+    robots.map do |robot|
+      Robot.new(robot)
+    end
+  end
+
+  def self.find(id)
+    database = SQLite3::Database.new('db/robot_world_development.db')
+    database.results_as_hash = true
+    robot = database.execute("SELECT * FROM robots WHERE id = ?", id).first
+    Robot.new(robot)
+  end
+
+  def self.edit(id, robot_params)
+    database = SQLite3::Database.new('db/robot_world_development.db')
+    database.results_as_hash = true
+    #binding.pry
+    database.execute("UPDATE robots
+                      SET name = ?,
+                        city = ?,
+                          state = ?,
+                            department = ?
+                  WHERE id = ?;",
+                  robot_params[:name],
+                  robot_params[:city],
+                  robot_params[:state],
+                  robot_params[:department],
+                  id)
+  Robot.find(id)
+  end
+
+  def self.destroy(id)
+    database = SQLite3::Database.new('db/robot_world_development.db')
+    database.results_as_hash = true
+    database.execute("DELETE FROM robots
+                      WHERE id = ?;", id)
+  end
+
+  def self.purge
+    database = SQLite3::Database.new('db/robot_world_development.db')
+    database.results_as_hash = true
+    database.execute("DELETE FROM robots;")
   end
 end

@@ -1,0 +1,9 @@
+<form action="/robots" method="post">
+  <p>Enter the fields for your new robot:</p>
+  Name:<input type='text' name='robot[name]' value='<%= Faker::Name.name %>'/><br/>
+  City:<input type='text' name='robot[city]' value='<%= Faker::Space.star %>'/><br/>
+  State:<input type='text' name='robot[state]' value='<%= Faker::Space.constellation %>'/><br/>
+  Department:<input type='text' name='robot[department]' value='<%= Faker::Team.creature %>''/><br/>
+  <input type='submit'/>
+</form>
+<h4>Pre-populated with Cool Stuff for Convenience/Laziness</h4>
