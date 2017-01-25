@@ -1,55 +1,54 @@
 require_relative '../models/robot.rb'
 
 class RobotWorldApp < Sinatra::Base
-  set :root, File.expand_path("..", __dir__)
-  set :method_override, true
+    set :root, File.expand_path('..', __dir__)
+    set :method_override, true
 
-  get '/' do
-    redirect '/robots'
-  end
+    get '/' do
+        redirect '/robots'
+    end
 
-  get '/robots' do
-    @robots = Robot.all
-    erb :index
-  end
+    get '/robots' do
+        @robots = Robot.all
+        erb :index
+    end
 
-  get '/new_robot' do
-    erb :new
-  end
+    get '/new_robot' do
+        erb :new
+    end
 
-  post '/robots' do
-    robot = Robot.new(params['robot'])
-    robot.save
-    redirect '/robots'
-  end
+    post '/robots' do
+        robot = Robot.new(params['robot'])
+        robot.save
+        redirect '/robots'
+    end
 
-  get '/robots/:id' do
-    @robot = Robot.find(params[:id])
-    erb :show
-  end
+    get '/robots/:id' do
+        @robot = Robot.find(params[:id])
+        erb :show
+    end
 
-  get '/robots/:id/edit' do
-    @robot = Robot.find(params['id'])
-    erb :edit
-  end
+    get '/robots/:id/edit' do
+        @robot = Robot.find(params['id'])
+        erb :edit
+    end
 
-  put '/robots/:id' do |id|
-    Robot.edit(id.to_i, params[:robot])
-    redirect "/robots/#{id}"
-  end
+    put '/robots/:id' do |id|
+        Robot.edit(id.to_i, params[:robot])
+        redirect "/robots/#{id}"
+    end
 
-  delete '/robots/:id' do |id|
-    Robot.destroy(id.to_i)
-    redirect "/robots"
-  end
+    delete '/robots/:id' do |id|
+        Robot.destroy(id.to_i)
+        redirect '/robots'
+    end
 
-  get '/daleks' do
-    Robot.purge
-    redirect "/robots"
-  end
+    get '/daleks' do
+        Robot.purge
+        redirect '/robots'
+    end
 
-  not_found do
-    erb :error
-  end
-
+    not_found do
+        erb :error
+    end
 end
